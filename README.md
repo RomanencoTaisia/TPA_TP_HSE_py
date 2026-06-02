@@ -38,5 +38,7 @@ python -m pytest
 Все зависимости проекта указаны в файле requirements.txt.
 
 Для запуска тестов используется библиотека pytest.
+
+примечание. лямбда функции и сортировки- опора на ресурс https://pythonist.ru/lyambda-funkczii-dlya-sortirovki-razlichnyh-spiskov-v-python/
  ## Автор- Романенко Таисия - группа ББИ2509❤️
  
