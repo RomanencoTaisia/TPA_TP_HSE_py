@@ -68,7 +68,7 @@ class Recipe:
 
 
     def __str__(self):
-        outputi= f"Блюдо называется{self.title}.\n"
+        outputi= f"Блюдо называется {self.title}.\n"
         outputi+="Ингредиенты- \n"
         for i in range ( len(self.ingredients)):
             ing=self.ingredients[i]
@@ -76,7 +76,54 @@ class Recipe:
             
         return outputi    
 
-"""4commit"""
+class ShoppingList:
+    def __init__(self):
+        self._items = []
+    def add_recipe(self,recipe:Recipe,portions:float):
+        if portions<=0:
+            raise ValueError("Количество порций должно быть положительным")
+        mashtab=recipe.scale(portions)
+        
+        for ing in mashtab.ingredients:
+            self._items.append((ing,recipe.title)) 
+    
+    def remove_recipe(self,title:str):
+        changed_ingr=[]
+        for ingr,recipe_title in self._items:
+            if recipe_title!=title:
+                changed_ingr.append((ingr,recipe_title))
+                
+        self._items=changed_ingr
+        
+    def get_list(self):
+        result={}
+        for ingredient, recipe_title in self._items:
+            key=(ingredient.name, ingredient.unit)
+            if key in result:
+                result[key] += ingredient.quantity
+            else:
+                result[key] = ingredient.quantity
+        inggredients= []
+        for key, quantity in result.items():
+            name, unit = key
+            inggredients.append(Ingredient(name, quantity, unit))
+            
+        inggredients.sort(key=lambda ingredient: ingredient.name)   
+        return inggredients 
+    
+    def __add__(self,other):
+        recap=ShoppingList()
+        for ingredient, recipe_title in self._items :
+            recap._items.append((ingredient,recipe_title))
+        for ingredient, recipe_title in other._items : 
+            recap._items.append((ingredient,recipe_title))
+        return recap
+    
+          
+             
+        
+                
+             
 
     
     
