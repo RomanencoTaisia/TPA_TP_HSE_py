@@ -66,6 +66,7 @@ class Recipe:
     def __len__(self):
         return len(self.ingredients)
 
+
     def __str__(self):
         outputi= f"Блюдо называется{self.title}.\n"
         outputi+="Ингредиенты- \n"
@@ -75,7 +76,7 @@ class Recipe:
             
         return outputi    
 
-
+"""4commit"""
 
     
     
