@@ -100,6 +100,142 @@ def test_len():
     assert len(recipe) == 2
     
            
+"""tests for Shopping List"""
+
+def test_add_recipe():
+    recipe = Recipe("Орешки со сгущенкой")
+    recipe.add_ingredient(Ingredient("Мука", 500, "г"))
+    recipe.add_ingredient(Ingredient("Сахар", 100, "г"))
+    lst = ShoppingList()
+    lst.add_recipe(recipe, 1)
+    result = lst.get_list()
+
+    assert len(result) == 2
+    assert result[0].name == "Мука"
+    assert result[0].quantity == 500
+    assert result[0].unit == "г"
+    assert result[1].name == "Сахар"
+    assert result[1].quantity == 100
+    assert result[1].unit == "г"
          
+def test_portions():
+    recipe = Recipe("Хачапури по аджарски")
+    recipe.add_ingredient(Ingredient("Сыр", 300, "г"))
+    lst = ShoppingList()
+
+    with pytest.raises(ValueError):
+        lst.add_recipe(recipe, -5)
+
+def test_remove_recipe():
+    recipe = Recipe("Хачапури по аджарски")
+    recipe.add_ingredient(Ingredient("Сыр", 300, "г"))
+
+    recipe2 = Recipe("Хачапури по мергельски")
+    recipe2.add_ingredient(Ingredient("Тесто", 400, "г"))
+
+    lst = ShoppingList()
+    lst.add_recipe(recipe, 1)
+    lst.add_recipe(recipe2, 1)
+    
+    lst.remove_recipe("Хачапури по мергельски")
+    afterall = lst.get_list()
+
+    assert len(afterall) == 1
+    assert afterall[0].name == "Сыр"
+    assert afterall[0].quantity == 300
+    assert afterall[0].unit == "г"
+    
+def test_remove_recipe_notexist():
+    recipe = Recipe("Хачапури по аджарски")
+    recipe.add_ingredient(Ingredient("Сыр", 300, "г"))
+
+    recipe2 = Recipe("Хачапури по мергельски")
+    recipe2.add_ingredient(Ingredient("Тесто", 400, "г"))
+
+    lst = ShoppingList()
+    lst.add_recipe(recipe, 1)
+    lst.add_recipe(recipe2, 1)
+    
+    lst.remove_recipe("Хачапури по имертильски")
+    afterall = lst.get_list()
+
+    assert len(afterall) == 2
+    assert afterall[0].name == "Сыр"
+    assert afterall[0].quantity == 300
+    assert afterall[0].unit == "г"
+        
+def test_get_list_same_ingr():
+    recipe = Recipe("Хачапури по аджарски")
+    recipe.add_ingredient(Ingredient("Сыр", 300, "г"))
+
+    recipe2 = Recipe("Хачапури по мергельски")
+    recipe2.add_ingredient(Ingredient("Сыр", 300, "г"))
+
+    lst = ShoppingList()
+    lst.add_recipe(recipe, 1)
+    lst.add_recipe(recipe2, 1)
+
+    result = lst.get_list()
+
+    assert len(result) == 1
+    assert result[0].name == "Сыр"
+    assert result[0].quantity == 600
+    assert result[0].unit == "г"
+    
+def test_get_list_sorted():
+    recipe = Recipe("Венские вафли в NY cafe")
+    recipe.add_ingredient(Ingredient("Сахар", 100, "г"))
+    recipe.add_ingredient(Ingredient("Мука миндальная", 200, "г"))
+    recipe.add_ingredient(Ingredient("Яйца", 2, "шт"))
+    lst = ShoppingList()
+    lst.add_recipe(recipe, 1)
+    result = lst.get_list()
+
+    assert result[0].name == "Мука миндальная"
+    assert result[1].name == "Сахар"
+    assert result[2].name == "Яйца"    
+        
+def test_add_two_shopping_lst():
+    recipe = Recipe("Вафельки")
+    recipe.add_ingredient(Ingredient("Мука", 300, "г"))
+    recipe2 = Recipe("Сырники")
+    recipe2.add_ingredient(Ingredient("Яйца", 2, "шт"))
+
+    lst1 = ShoppingList()
+    lst2 = ShoppingList()
+    lst1.add_recipe(recipe, 1)
+    lst2.add_recipe(recipe2, 1)
+
+    lst_final = lst1 + lst2
+    result = lst_final.get_list()
+
+    assert len(result) == 2
+    assert result[0].name == "Мука"
+    assert result[0].quantity == 300
+    assert result[1].name == "Яйца"
+    assert result[1].quantity == 2        
+ 
+def test_add_two_shopping_lst_nochange():
+    recipe = Recipe("Вафельки")
+    recipe.add_ingredient(Ingredient("Мука", 300, "г"))
+    recipe2 = Recipe("Сырники")
+    recipe2.add_ingredient(Ingredient("Яйца", 2, "шт"))
+    
+    lst1 = ShoppingList()
+    lst2 = ShoppingList()
+    lst1.add_recipe(recipe, 1)
+    lst2.add_recipe(recipe2, 1)
+
+    lst_final = lst1 + lst2
+
+    result1 = lst1.get_list()
+    result2 = lst2.get_list()
+    result_final = lst_final.get_list()
+    
+    assert len(result1) == 1
+    assert result1[0].name == "Мука"
+    assert len(result2) == 1
+    assert result2[0].name == "Яйца"
+    assert len(result_final) == 2         
       
         
