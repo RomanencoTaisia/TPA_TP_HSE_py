@@ -119,7 +119,27 @@ class ShoppingList:
             recap._items.append((ingredient,recipe_title))
         return recap
     
-          
+class DietaryRecipe(Recipe):
+    def __init__(self,title,dieta,ingredients=None):
+        super().__init__(title)
+        self.dieta = dieta
+        if ingredients is not None:
+            for ingredient in ingredients:
+                self.add_ingredient(ingredient)
+    def scale(self, ratio: float):
+        scale_recipe= super().scale(ratio)
+        
+        changed_recipe= DietaryRecipe(self.title, self.dieta)
+        for ingredient in scale_recipe.ingredients:
+            changed_recipe.add_ingredient(ingredient)
+        return changed_recipe
+    
+    def __str__(self):
+        parent_text = super().__str__()
+        first_line = parent_text.split("\n")[0]
+        return f"[{self.dieta}] {first_line}"    
+    
+ 
              
         
                 
